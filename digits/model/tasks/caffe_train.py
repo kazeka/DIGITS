@@ -71,6 +71,9 @@ class CaffeTrainTask(TrainTask):
         return state
 
     def __setstate__(self, state):
+        # patch up state to make jobs relocatable
+        state['job_dir'] = os.path.join(config_option('jobs_dir'), os.path.basename(state['job_dir']))
+
         super(CaffeTrainTask, self).__setstate__(state)
 
         # Upgrade pickle file
@@ -964,4 +967,3 @@ class CaffeTrainTask(TrainTask):
 
         self._transformer = t
         return self._transformer
-

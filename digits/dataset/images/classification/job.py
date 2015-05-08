@@ -30,7 +30,10 @@ class ImageClassificationDatasetJob(ImageDatasetJob):
             print 'Upgrading ImageClassificationDatasetJob to version 2'
             task = self.train_db_task()
             if task.image_dims[2] == 3:
-                if task.encode:
+                # patch to import old jobs
+                from digits.config import config_option
+                task.job_dir = os.path.join(config_option('jobs_dir'), os.pa    th.basename(task.job_dir))
+                if task:
                     if task.mean_file.endswith('.binaryproto'):
                         print '\tConverting mean file "%s" from RGB to BGR.' % task.path(task.mean_file)
                         from caffe.proto import caffe_pb2
@@ -180,4 +183,3 @@ class ImageClassificationDatasetJob(ImageDatasetJob):
                         labels_file = self.labels_file,
                         )
                     )
-
